@@ -1,0 +1,217 @@
+FORMAT: 1A
+
+# Fork
+
+## Users [/users]
+### Get current user [GET /users/current]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Get guest token [GET /users/guest]
+
++ Response 200 (application/json)
+
+        {
+            "auth_token": "saddas",
+            "id": 100
+        }
+        
+### Login [POST /users/login]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
++ Response 401 (application/json)
+
+        {
+        }
+        
+### Register [POST /users/register]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Register with facebook [POST /users/register_facebook]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Register Device (APNS) [POST /users/apns]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Add code (credits) [POST /users/code]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Recover Password [POST /users/recover]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Logout [DELETE /users/logout]
+
++ Response 200 (application/json)
+
+        {
+        }
+
+## Dishes [/dishes]
+### Get dishes [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Get dish data [GET /dishes/{id}]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+## Shoping Cart [/cart]
+
+### Update cart [PATCH /cart]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+## Orders [/orders]
+### Get order list [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Get order data [GET /orders/{id}]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Create order [POST /orders]
+
++ Response 200 (application/json)
+
+        {
+        }
+
+        
+### Cancel order [DELETE /orders/{id}]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Rate order [POST /orders/{id}/rate]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Send details by email [POST /orders/{id}/send_details]
+
++ Response 200 (application/json)
+
+        {
+        }
+
+## Addresses [/addresses]
+### Get address list [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Create new address [POST]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Update address [PATCH /addresses/{id}]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Remove address [DELETE /addresses/{id}]
+
++ Response 200 (application/json)
+
+        {
+        }
+
+## Comunes [/comunes]
+### Get comune list [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+## Stores [/stores]
+### Get store list [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+
+## Schedules [/schedules]
+### Get schedule list [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+
+## Payments [/payments]
+### Get payment list [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Create new payment [POST]
+
++ Response 200 (application/json)
+
+        {
+        }
+        
+### Remove payment [DELETE /payments/{id}]
+
++ Response 200 (application/json)
+
+        {
+        }
