@@ -7,86 +7,117 @@ FORMAT: 1A
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (User)
         
 ### Get guest token [GET /users/guest]
 
 + Response 200 (application/json)
 
-        {
-            "auth_token": "saddas",
-            "id": 100
-        }
+    + Attributes (object)
+        + auth_token: abcdef1234567890 (required)
+        + id: 1 (number, required)
         
 ### Login [POST /users/login]
 
++ Request
+
+    + Attributes (object)
+        + email: juansemilla@gmail.com (required)
+        + password: abcdefghi (required)
+
 + Response 200 (application/json)
 
-        {
-        }
-        
+    + Attributes (User)
+    
 + Response 401 (application/json)
 
-        {
-        }
-        
+    + Attributes (object)
+        + message: La contraseña es inválida o el usuario no existe (required)
+
 ### Register [POST /users/register]
 
-+ Response 200 (application/json)
++ Request 
 
-        {
-        }
+    + Attributes (object)
+        + email: juansemilla@gmail.com (required)
+        + full_name: Juan Semillamanzana (required)
+        + phone_number: +56975385526 (required)
+        + password: abcdefghi (required)
+        + auth_token: abcdef1234567890 - Solo si se entró como guest inicialmente
+        + id: 1 (number) - Solo si se entró como guest inicialmente
+
++ Response 201 (application/json)
+
+    + Attributes (User)
         
 ### Register with facebook [POST /users/register_facebook]
 
-+ Response 200 (application/json)
++ Request
+    + Attributes (object)
+        + email: juansemilla@gmail.com (required)
+        + full_name: Juan Semillamanzana (required)
+        + phone_number: +56975385526
+        + facebook_token: b0e89a73ab7d44132dc6125689fbc8b2 (required)
 
-        {
-        }
++ Response 201 (application/json)
+
+    + Attributes (User)
         
 ### Register Device (APNS) [POST /users/apns]
 
-+ Response 200 (application/json)
++ Request
 
-        {
-        }
-        
+    + Attributes (Apns)
+
++ Response 201 (application/json)
+
+    + Attributes (Apns)
+
 ### Add code (credits) [POST /users/code]
 
++ Request
+
+    + Attributes (object)
+        + code: AB35E8 (required)
+
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (User)
+    
++ Response 404 (application/json)
+
+    + Attributes (object)
+        + message: El código ingresado no es válido (required)
         
 ### Recover Password [POST /users/recover]
 
++ Request
+
+    + Attributes (object)
+        + email: juansemilla@gmail.com (required)
+
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + message: Se han enviado las instrucciones para la recuperación al correo (required)
         
 ### Logout [DELETE /users/logout]
 
-+ Response 200 (application/json)
-
-        {
-        }
++ Response 204
 
 ## Dishes [/dishes]
 ### Get dishes [GET]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + sections (array[DishSection], required)
         
 ### Get dish data [GET /dishes/{id}]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (Dish)
         
 ## Shoping Cart [/cart]
 
@@ -102,92 +133,85 @@ FORMAT: 1A
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + orders (array[Order], required)
         
 ### Get order data [GET /orders/{id}]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (Order)
         
 ### Create order [POST /orders]
 
++ Response 201 (application/json)
+
+    + Attributes (Order)
+    
+### Modify order [PATCH /orders/{id}]
+
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (Order)
 
-        
 ### Cancel order [DELETE /orders/{id}]
 
-+ Response 200 (application/json)
++ Response 204
 
-        {
-        }
-        
 ### Rate order [POST /orders/{id}/rate]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (Order)
         
 ### Send details by email [POST /orders/{id}/send_details]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + message: Se han enviado los detalles con éxito (required)
 
 ## Addresses [/addresses]
 ### Get address list [GET]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + address_array (array[Location])
         
 ### Create new address [POST]
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
-        {
-        }
+    + Attributes (Location)
         
 ### Update address [PATCH /addresses/{id}]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (Location)
         
 ### Remove address [DELETE /addresses/{id}]
 
-+ Response 200 (application/json)
-
-        {
-        }
++ Response 204
 
 ## Comunes [/comunes]
 ### Get comune list [GET]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + comunes (array[Commune])
         
 ## Stores [/stores]
 ### Get store list [GET]
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + stores (array[Location], required)
 
-## Schedules [/schedules]
-### Get schedule list [GET]
+### Get schedule list [GET /stores/{id}/schedules]
 
 + Response 200 (application/json)
 
@@ -199,19 +223,89 @@ FORMAT: 1A
 
 + Response 200 (application/json)
 
-        {
-        }
+    + Attributes (object)
+        + payments (array[Payment], required)
         
 ### Create new payment [POST]
 
-+ Response 200 (application/json)
++ Request
 
-        {
-        }
+    + Attributes (Payment)
+
++ Response 201 (application/json)
+
+    + Attributes (Payment)
         
 ### Remove payment [DELETE /payments/{id}]
 
-+ Response 200 (application/json)
++ Response 204 (application/json)
+        
+# Data Structures
 
-        {
-        }
+## User (object)
++ id: 1 (number, required)
++ full_name: Juan Semillamanzana (required)
++ email: juansemilla@gmail.com (required)
++ phone_number: +56975385526 (required)
++ auth_token: abcdef1234567890 (required)
++ facebook_token: b0e89a73ab7d44132dc6125689fbc8b2
++ credits: 5000 (number, required)
++ free_deliveries: 2 (number, required)
+
+## Location (object)
++ id: 1 (number, required)
++ name: Casa (required)
++ address: Avenida Siempreviva 1234 (required)
++ apartment_number: 701 (required)
++ coordinates (Coordinates, required)
+
+## Coordinates (object)
++ longitude: 33.4163355 (number, required)
++ latitude: 70.5846429 (number, required)
+
+## DishSection (object)
++ name: Sugerencias del chef (required)
++ dishes (array[Dish], required)
+
+## Dish (object)
++ id: 1 (number, required)
++ name: 1 (number, required)
++ image_url: "static/image.png" (required)
++ category (Category, required)
++ tags (array[Tag], required)
++ portions (array[Portion], required)
+
+## Portion (object)
++ sku: 1 (number, required)
++ kind: 0 (number, required) - 0: Simple, 1: Doble
++ quantity: 0 (number)
+
+## Category (object)
++ id: 1 (number, required)
++ name: Platos (required)
+
+## Tag (object)
++ id: 1 (number, required)
++ name: Vegetariano (required)
+
+## Order (object)
++ order_detail (array[Dish], required)
++ kind: 0 (number, required) - 0: Despacho, 1: Retiro
++ user_rating: 0 (number, required) - De 0 a 5
++ location (Location, required) - Si es despacho es la ubicación seleccionada por el usuario, si es retiro entonces es la dirección del local.
++ schedule (Schedule)
++ status: 0 (number, required) - 0: Ingresado, 1: Preparado, 2: En Camino, 3: Disponible para retiro
+
+## Payment (object)
++ id: 1 (number, required)
+
+## Schedule (object)
++ id: 1 (number, required)
+
+## Apns (object)
++ registration_id: abcdef1234567890 (required)
++ device_id: abcdef1234567890 (required)
+
+## Commune (object)
++ id: 1 (number, required)
++ name: Santiago (required)
