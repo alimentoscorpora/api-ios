@@ -123,11 +123,14 @@ FORMAT: 1A
 
 ### Update cart [PATCH /cart]
 
++ Request
+
+    + Attributes (Order)
+
 + Response 200 (application/json)
 
-        {
-        }
-        
+    + Attributes (Cart)
+
 ## Orders [/orders]
 ### Get order list [GET]
 
@@ -195,13 +198,13 @@ FORMAT: 1A
 
 + Response 204
 
-## Comunes [/comunes]
-### Get comune list [GET]
+## Communes [/communes]
+### Get commune list [GET]
 
 + Response 200 (application/json)
 
     + Attributes (object)
-        + comunes (array[Commune])
+        + communes (array[Commune])
         
 ## Stores [/stores]
 ### Get store list [GET]
@@ -249,19 +252,24 @@ FORMAT: 1A
 + phone_number: +56975385526 (required)
 + auth_token: abcdef1234567890 (required)
 + facebook_token: b0e89a73ab7d44132dc6125689fbc8b2
-+ credits: 5000 (number, required)
-+ free_deliveries: 2 (number, required)
++ credits: 5000 (number, required) - Créditos disponibles para el usuario
++ free_deliveries: 2 (number, required) - Cantidad de repartos gratis disponibles
 
 ## Location (object)
 + id: 1 (number, required)
 + name: Casa (required)
 + address: Avenida Siempreviva 1234 (required)
 + apartment_number: 701 (required)
-+ coordinates (Coordinates, required)
++ commune (Commune, required)
++ coordinates (Coordinates, required) - Coordenadas del lugar
++ geofence (Geofence) - Polígono de reparto, solo para tiendas
 
 ## Coordinates (object)
 + longitude: 33.4163355 (number, required)
 + latitude: 70.5846429 (number, required)
+
+## Geofence (object)
++ polygon_vertices (array[Coordinates], required) - Vertices del polígono, deben venir en orden para poder dibujarlas en el mapa
 
 ## DishSection (object)
 + name: Sugerencias del chef (required)
@@ -295,6 +303,12 @@ FORMAT: 1A
 + location (Location, required) - Si es despacho es la ubicación seleccionada por el usuario, si es retiro entonces es la dirección del local.
 + schedule (Schedule)
 + status: 0 (number, required) - 0: Ingresado, 1: Preparado, 2: En Camino, 3: Disponible para retiro
++ payment (Payment, required) - Tipo de pago utilizado para el pedido
+
+## Cart (Order)
++ applied_credits: 5000 (number, required)
++ purchase_amount: 25000 (number, required)
++ available_schedule (array[Schedule], required)
 
 ## Payment (object)
 + id: 1 (number, required)
