@@ -106,14 +106,34 @@ FORMAT: 1A
 + Response 204
 
 ## Dishes [/dishes]
-### Get dishes [GET]
+### Get dishes for an address [GET /dishes?{address_id}]
+
++ Parameters
+    + address_id: 1 (number, required) - Platos disponibles para un location en específico
 
 + Response 200 (application/json)
 
     + Attributes (object)
-        + sections (array[DishSection], required)
+        + categories (array[Category], required)
+        + selected_address (Address, required)
+        + available_schedules (array[Schedule], required)
+        
+### Get dishes for a store [GET /dishes?{store_id}]
+
++ Parameters
+    + store_id: 1 (number, required) - Platos disponibles para una tienda en específico
+
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + categories (array[Category], required)
+        + selected_store (Store, required)
+        + available_schedules (array[Schedule], required)
         
 ### Get dish data [GET /dishes/{id}]
+
++ Parameters
+    + id: 1 (number, required)
 
 + Response 200 (application/json)
 
@@ -141,6 +161,9 @@ FORMAT: 1A
         
 ### Get order data [GET /orders/{id}]
 
++ Parameters
+    + id: 1 (number, required)
+
 + Response 200 (application/json)
 
     + Attributes (Order)
@@ -150,24 +173,27 @@ FORMAT: 1A
 + Response 201 (application/json)
 
     + Attributes (Order)
-    
-### Modify order [PATCH /orders/{id}]
-
-+ Response 200 (application/json)
-
-    + Attributes (Order)
 
 ### Cancel order [DELETE /orders/{id}]
+
++ Parameters
+    + id: 1 (number, required)
 
 + Response 204
 
 ### Rate order [POST /orders/{id}/rate]
+
++ Parameters
+    + id: 1 (number, required)
 
 + Response 200 (application/json)
 
     + Attributes (Order)
         
 ### Send details by email [POST /orders/{id}/send_details]
+
++ Parameters
+    + id: 1 (number, required)
 
 + Response 200 (application/json)
 
@@ -180,21 +206,27 @@ FORMAT: 1A
 + Response 200 (application/json)
 
     + Attributes (object)
-        + address_array (array[Location])
+        + addresses (array[Address])
         
 ### Create new address [POST]
 
 + Response 201 (application/json)
 
-    + Attributes (Location)
+    + Attributes (Address)
         
 ### Update address [PATCH /addresses/{id}]
 
++ Parameters
+    + id: 1 (number, required)
+
 + Response 200 (application/json)
 
-    + Attributes (Location)
+    + Attributes (Address)
         
 ### Remove address [DELETE /addresses/{id}]
+
++ Parameters
+    + id: 1 (number, required)
 
 + Response 204
 
@@ -212,14 +244,7 @@ FORMAT: 1A
 + Response 200 (application/json)
 
     + Attributes (object)
-        + stores (array[Location], required)
-
-### Get schedule list [GET /stores/{id}/schedules]
-
-+ Response 200 (application/json)
-
-        {
-        }
+        + stores (array[Store], required)
 
 ## Payments [/payments]
 ### Get payment list [GET]
@@ -241,6 +266,9 @@ FORMAT: 1A
         
 ### Remove payment [DELETE /payments/{id}]
 
++ Parameters
+    + id: 1 (number, required)  
+
 + Response 204 (application/json)
         
 # Data Structures
@@ -251,18 +279,28 @@ FORMAT: 1A
 + email: juansemilla@gmail.com (required)
 + phone_number: +56975385526 (required)
 + auth_token: abcdef1234567890 (required)
-+ facebook_token: b0e89a73ab7d44132dc6125689fbc8b2
++ facebook_token (nullable)
 + credits: 5000 (number, required) - Créditos disponibles para el usuario
 + free_deliveries: 2 (number, required) - Cantidad de repartos gratis disponibles
++ active: true (boolean, required) - Se le permite al usuario hacer retiros (reservas) o no.
 
-## Location (object)
+## Address (object)
 + id: 1 (number, required)
 + name: Casa (required)
-+ address: Avenida Siempreviva 1234 (required)
-+ apartment_number: 701 (required)
++ `street_and_number`: Avenida Siempreviva 1234 (required)
++ unit_number: 701 (number, nullable)
 + commune (Commune, required)
-+ coordinates (Coordinates, required) - Coordenadas del lugar
-+ geofence (Geofence) - Polígono de reparto, solo para tiendas
++ coordinates (Coordinates, required) - Coordenadas de la ubicación
++ delivery_available: true (boolean, required) - Indica si la ubicación tiene delivery disponible o no
+
+## Store (object)
++ id: 1 (number, required)
++ name: Plaza las lilas (required)
++ address: Eliodoro Yañez 2876 (required)
++ unit_number (number, nullable)
++ commune (Commune, required)
++ coordinates (Coordinates, required) - Coordenadas de la tienda
++ geofence (Geofence, required) - Polígono de reparto
 
 ## Coordinates (object)
 + longitude: 33.4163355 (number, required)
@@ -271,50 +309,105 @@ FORMAT: 1A
 ## Geofence (object)
 + polygon_vertices (array[Coordinates], required) - Vertices del polígono, deben venir en orden para poder dibujarlas en el mapa
 
-## DishSection (object)
-+ name: Sugerencias del chef (required)
-+ dishes (array[Dish], required)
+## Category (object)
++ id: 1 (number, required)
++ name: Almuerzo (required)
++ dishes (array[Section], required)
 
 ## Dish (object)
 + id: 1 (number, required)
-+ name: 1 (number, required)
-+ image_url: "static/image.png" (required)
-+ category (Category, required)
++ name: Asado de tira con lentejas al vino tinto (required)
++ image_url: static/image.png (required)
 + tags (array[Tag], required)
 + portions (array[Portion], required)
 
 ## Portion (object)
 + sku: 1 (number, required)
-+ kind: 0 (number, required) - 0: Simple, 1: Doble
-+ quantity: 0 (number)
++ kind (enum[number], required) - Tipo de porción
+    + Members
+        + 0 - Simple
+        + 1 - Doble
 
-## Category (object)
+## Section (object)
 + id: 1 (number, required)
-+ name: Platos (required)
++ name: Sugerencias del chef (required)
++ dishes (array[Dish], required)
 
 ## Tag (object)
 + id: 1 (number, required)
 + name: Vegetariano (required)
++ image_url: static/image.png (required)
+
+## CartItem (object)
++ portion (Portion, required)
++ quantity: 1 (number, required)
+
+## Item (object)
++ portion (Portion, required)
++ quantity: 1 (number, required)
++ dish_name: Asado de tira con lentejas al vino tinto (required)
++ dish_id: 1 (number, required)
++ unit_price: 15000 (number, required)
 
 ## Order (object)
-+ order_detail (array[Dish], required)
-+ kind: 0 (number, required) - 0: Despacho, 1: Retiro
-+ user_rating: 0 (number, required) - De 0 a 5
-+ location (Location, required) - Si es despacho es la ubicación seleccionada por el usuario, si es retiro entonces es la dirección del local.
++ items (array[Item], required)
++ kind (enum[number], required) - Tipo de orden
+    + Members
+        + 0 - Despacho
+        + 1 - Retiro
++ rating (Rating) - Evaluación del usuario
++ address (Address, nullable) - Dirección del usuario, nula a menos que sea despacho
++ store (Store, nullable) - Dirección de la tienda, nula a menos que sea retiro
 + schedule (Schedule)
-+ status: 0 (number, required) - 0: Ingresado, 1: Preparado, 2: En Camino, 3: Disponible para retiro
++ status (enum[number], required) - Estado de la orden
+    + Members
+        + 0 - Ingresado
+        + 1 - Preparado
+        + 2 - En camino
+        + 3 - Disponible para retiro
 + payment (Payment, required) - Tipo de pago utilizado para el pedido
-
-## Cart (Order)
 + applied_credits: 5000 (number, required)
-+ purchase_amount: 25000 (number, required)
-+ available_schedule (array[Schedule], required)
++ delivery_price: 2000 (number, required)
++ paid_amount: 25000 (number, required)
++ hash: ABCDEF1234567890 (required) - Hash único para generar el QR
++ delivered_timestamp: 1505499442 (number, nullable) - Fecha y hora (epoch) de la entrega de la orden, nulo si no se ha entregado
+
+## Rating (object)
++ score (enum[number], required) - 
+    + Members
+        + 1 - Decepcionante
+        + 2 - 
+        + 3 - 
+        + 4 - 
+        + 5 - Excelente!
++ message (RatingMessage) - Mensaje asociado a la evaluación
+
+## RatingMessage (object)
++ id: 1 (number, required)
++ text: Error en el pedido
+
+## Cart (object)
++ items (array[CartItem], required)
++ kind (enum[number], required) - Tipo de orden
+    + Members
+        + 0 - Despacho
+        + 1 - Retiro
++ address (Address, nullable) - Dirección del usuario, nula a menos que sea despacho
++ store (Store, nullable) - Dirección de la tienda, nula a menos que sea retiro
++ schedule (Schedule)
++ payment (Payment, required) - Tipo de pago seleccionado para la compra
++ `credits_to_be_paid`: 5000 (number, required)
++ delivery_price: 2000 (number, required)
++ `amount_to_be_paid`: 25000 (number, required)
 
 ## Payment (object)
 + id: 1 (number, required)
 
 ## Schedule (object)
 + id: 1 (number, required)
++ name: Lo antes posible (required)
++ from_timestamp: 1505499442 (number, required) - Hora de inicio
++ to_timestamp: 1505500000 (number, required) - Hora de inicio
 
 ## Apns (object)
 + registration_id: abcdef1234567890 (required)
