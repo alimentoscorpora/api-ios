@@ -49,6 +49,14 @@ FORMAT: 1A
 + Response 201 (application/json)
 
     + Attributes (User)
+    
++ Response 400 (application/json)
+
+    + Attributes (object)
+        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+            + email: El correo ya está en uso (required)
+            + full_name: Nombre no puede ser vacío
+            + password: La contraseña debe ser de un largo mínimo de 6 caracteres (required)
         
 ### Register with facebook [POST /users/register_facebook]
 
@@ -62,6 +70,14 @@ FORMAT: 1A
 + Response 201 (application/json)
 
     + Attributes (User)
+    
++ Response 400 (application/json)
+
+    + Attributes (object)
+        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+            + email: El correo ya está en uso (required)
+            + facebook_token: El token no es válido
+            + password: La contraseña debe ser de un largo mínimo de 6 caracteres (required)
         
 ### Register Device (APNS) [POST /users/apns]
 
@@ -72,6 +88,14 @@ FORMAT: 1A
 + Response 201 (application/json)
 
     + Attributes (Apns)
+    
++ Response 400 (application/json)
+
+    + Attributes (object)
+        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+            + email: El correo ya está en uso (required)
+            + facebook_token: El token de facebook no es válido
+            + password: La contraseña debe ser de un largo mínimo de 6 caracteres (required)
 
 ### Add code (credits) [POST /users/code]
 
@@ -109,7 +133,7 @@ FORMAT: 1A
 ### Get dishes for an address [GET /dishes?{address_id}]
 
 + Parameters
-    + address_id: 1 (number, required) - Platos disponibles para un location en específico
+    + address_id: 1 (number, required) - Platos disponibles para un address en específico
 
 + Response 200 (application/json)
 
@@ -145,7 +169,7 @@ FORMAT: 1A
 
 + Request
 
-    + Attributes (Order)
+    + Attributes (CartConfig)
 
 + Response 200 (application/json)
 
@@ -170,6 +194,9 @@ FORMAT: 1A
         
 ### Create order [POST /orders]
 
++ Request
+    + Attributes (CartConfig)
+
 + Response 201 (application/json)
 
     + Attributes (Order)
@@ -185,12 +212,17 @@ FORMAT: 1A
 
 + Parameters
     + id: 1 (number, required)
+    
++ Request
+    + Attributes (object)
+        + score: 1 (number, required)
+        + message_id: 1 (number, required) - Id del mensaje seleccionado
 
 + Response 200 (application/json)
 
     + Attributes (Order)
         
-### Send details by email [POST /orders/{id}/send_details]
+### Send details by email [POST /orders/{id}/email_details]
 
 + Parameters
     + id: 1 (number, required)
@@ -210,6 +242,14 @@ FORMAT: 1A
         
 ### Create new address [POST]
 
++ Request
+    + Attributes (object)
+        + name: Casa (required)
+        + `street_and_number`: Avenida Siempreviva 1234 (required)
+        + unit_number: 701 (number, nullable)
+        + commune_id: 1 (number, required) - Id de la comuna seleccionada
+        + coordinates (Coordinates, required) - Coordenadas de la ubicación
+
 + Response 201 (application/json)
 
     + Attributes (Address)
@@ -218,6 +258,14 @@ FORMAT: 1A
 
 + Parameters
     + id: 1 (number, required)
+    
++ Request
+    + Attributes (object)
+        + name: Casa (required)
+        + `street_and_number`: Avenida Siempreviva 1234 (required)
+        + unit_number: 701 (number, nullable)
+        + commune_id: 1 (number, required) - Id de la comuna seleccionada
+        + coordinates (Coordinates, required) - Coordenadas de la ubicación
 
 + Response 200 (application/json)
 
@@ -253,7 +301,7 @@ FORMAT: 1A
 
     + Attributes (object)
         + payments (array[Payment], required)
-        
+
 ### Create new payment [POST]
 
 + Request
@@ -270,19 +318,25 @@ FORMAT: 1A
     + id: 1 (number, required)  
 
 + Response 204 (application/json)
-        
-# Data Structures
 
-## User (object)
-+ id: 1 (number, required)
-+ full_name: Juan Semillamanzana (required)
-+ email: juansemilla@gmail.com (required)
-+ phone_number: +56975385526 (required)
-+ auth_token: abcdef1234567890 (required)
-+ facebook_token (nullable)
-+ credits: 5000 (number, required) - Créditos disponibles para el usuario
-+ free_deliveries: 2 (number, required) - Cantidad de repartos gratis disponibles
-+ active: true (boolean, required) - Se le permite al usuario hacer retiros (reservas) o no.
+## Ratings [/ratings]
+### Get rating list [GET]
+
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + ratings (array[object], required) - Listado de posibles evaluaciones y mensajes asociados
+            - (object)
+                + score (enum[number], required)
+                    + Members
+                        + 1 - Decepcionante
+                        + 2 - 
+                        + 3 - 
+                        + 4 - 
+                        + 5 - Excelente!
+                + messages (array[RatingMessage], required)
+
+# Data Structures
 
 ## Address (object)
 + id: 1 (number, required)
@@ -293,54 +347,73 @@ FORMAT: 1A
 + coordinates (Coordinates, required) - Coordenadas de la ubicación
 + delivery_available: true (boolean, required) - Indica si la ubicación tiene delivery disponible o no
 
-## Store (object)
-+ id: 1 (number, required)
-+ name: Plaza las lilas (required)
-+ address: Eliodoro Yañez 2876 (required)
-+ unit_number (number, nullable)
-+ commune (Commune, required)
-+ coordinates (Coordinates, required) - Coordenadas de la tienda
-+ geofence (Geofence, required) - Polígono de reparto
+## Apns (object)
++ registration_id: abcdef1234567890 (required)
++ device_id: abcdef1234567890 (required)
 
-## Coordinates (object)
-+ longitude: 33.4163355 (number, required)
-+ latitude: 70.5846429 (number, required)
+## Cart (object)
++ items (array[CartItem], required)
++ kind (enum[number], required) - Tipo de orden
+    + Members
+        + 0 - Despacho
+        + 1 - Retiro
++ address (Address, nullable) - Dirección del usuario, nula a menos que sea despacho
++ store (Store, nullable) - Dirección de la tienda, nula a menos que sea retiro
++ schedule (Schedule, required)
++ payment (Payment, required) - Tipo de pago seleccionado para la compra
++ `credits_to_be_paid`: 5000 (number, required)
++ delivery_price: 2000 (number, required)
++ `amount_to_be_paid`: 25000 (number, required)
 
-## Geofence (object)
-+ polygon_vertices (array[Coordinates], required) - Vertices del polígono, deben venir en orden para poder dibujarlas en el mapa
+## CartConfig (object)
++ items (array[CartItem], required)
++ kind (enum[number], required) - Tipo de orden
+    + Members
+        + 0 - Despacho
+        + 1 - Retiro
++ address_id: 1 (number, nullable) - id del usuario, nula a menos que sea despacho
++ store_id: 1 (number, nullable) - id de la tienda, nula a menos que sea retiro
++ schedule_id: 1 (number, required)
++ payment_id: 1 (number, required)
+
+## CartItem (object)
++ portion (Portion, required)
++ quantity: 1 (number, required)
 
 ## Category (object)
 + id: 1 (number, required)
 + name: Almuerzo (required)
 + dishes (array[Section], required)
 
+## Comment (object)
++ author_name: Sofía (required)
++ body: Lorem ipsum dolor sit amet (required)
+
+## Commune (object)
++ id: 1 (number, required)
++ name: Santiago (required)
+
+## Coordinates (object)
++ longitude: 33.4163355 (number, required)
++ latitude: 70.5846429 (number, required)
+
 ## Dish (object)
 + id: 1 (number, required)
-+ name: Asado de tira con lentejas al vino tinto (required)
-+ image_url: static/image.png (required)
++ title: Asado de tira (required)
++ subtitle: con lentejas al vino tinto (required)
++ thumbnail_url: static/thumbnail.png (required)
 + tags (array[Tag], required)
 + portions (array[Portion], required)
 
-## Portion (object)
-+ sku: 1 (number, required)
-+ kind (enum[number], required) - Tipo de porción
-    + Members
-        + 0 - Simple
-        + 1 - Doble
+## DishFull (Dish)
++ description: Congrio cocido al vapor (required)
++ chef_name: Laurent Pasqualetto (required)
++ chef_comment: Este plato para mi es (required)
++ user_comments (array[Comment], required)
++ image_url: static/full.png (required)
 
-## Section (object)
-+ id: 1 (number, required)
-+ name: Sugerencias del chef (required)
-+ dishes (array[Dish], required)
-
-## Tag (object)
-+ id: 1 (number, required)
-+ name: Vegetariano (required)
-+ image_url: static/image.png (required)
-
-## CartItem (object)
-+ portion (Portion, required)
-+ quantity: 1 (number, required)
+## Geofence (object)
++ polygon_vertices (array[Coordinates], required) - Vertices del polígono, deben venir en orden para poder dibujarlas en el mapa
 
 ## Item (object)
 + portion (Portion, required)
@@ -372,6 +445,16 @@ FORMAT: 1A
 + hash: ABCDEF1234567890 (required) - Hash único para generar el QR
 + delivered_timestamp: 1505499442 (number, nullable) - Fecha y hora (epoch) de la entrega de la orden, nulo si no se ha entregado
 
+## Payment (object)
++ id: 1 (number, required)
+
+## Portion (object)
++ sku: 1 (number, required)
++ kind (enum[number], required) - Tipo de porción
+    + Members
+        + 0 - Simple
+        + 1 - Doble
+
 ## Rating (object)
 + score (enum[number], required) - 
     + Members
@@ -386,33 +469,48 @@ FORMAT: 1A
 + id: 1 (number, required)
 + text: Error en el pedido
 
-## Cart (object)
-+ items (array[CartItem], required)
-+ kind (enum[number], required) - Tipo de orden
-    + Members
-        + 0 - Despacho
-        + 1 - Retiro
-+ address (Address, nullable) - Dirección del usuario, nula a menos que sea despacho
-+ store (Store, nullable) - Dirección de la tienda, nula a menos que sea retiro
-+ schedule (Schedule)
-+ payment (Payment, required) - Tipo de pago seleccionado para la compra
-+ `credits_to_be_paid`: 5000 (number, required)
-+ delivery_price: 2000 (number, required)
-+ `amount_to_be_paid`: 25000 (number, required)
-
-## Payment (object)
-+ id: 1 (number, required)
-
 ## Schedule (object)
 + id: 1 (number, required)
 + name: Lo antes posible (required)
 + from_timestamp: 1505499442 (number, required) - Hora de inicio
 + to_timestamp: 1505500000 (number, required) - Hora de inicio
 
-## Apns (object)
-+ registration_id: abcdef1234567890 (required)
-+ device_id: abcdef1234567890 (required)
-
-## Commune (object)
+## Section (object)
 + id: 1 (number, required)
-+ name: Santiago (required)
++ name: Sugerencias del chef (nullable)
++ dishes (array[Dish], required)
+
+## ServiceHours (object)
++ weekday (object)
+    + open: `09:00-04:00` (string) - Formato: <Hora><Timezone>
+    + close: `21:00-04:00` (string) - Formato: <Hora><Timezone>
++ weekend (object)
+    + open: `10:00-04:00` (string) - Formato: <Hora><Timezone>
+    + close: `22:00-04:00` (string) - Formato: <Hora><Timezone>
+
+## Store (object)
++ id: 1 (number, required)
++ name: Plaza las lilas (required)
++ address: Eliodoro Yañez 2876 (required)
++ unit_number (number, nullable)
++ commune (Commune, required)
++ coordinates (Coordinates, required) - Coordenadas de la tienda
++ geofence (Geofence, required) - Polígono de reparto
++ image_url: static/image.png (required)
++ service (ServiceHours, required)
+
+## Tag (object)
++ id: 1 (number, required)
++ name: Vegetariano (required)
++ image_url: static/image.png (required)
+
+## User (object)
++ id: 1 (number, required)
++ full_name: Juan Semillamanzana (required)
++ email: juansemilla@gmail.com (required)
++ phone_number: +56975385526 (required)
++ auth_token: abcdef1234567890 (required)
++ facebook_token (nullable)
++ credits: 5000 (number, required) - Créditos disponibles para el usuario
++ free_deliveries: 2 (number, required) - Cantidad de repartos gratis disponibles
++ active: true (boolean, required) - Se le permite al usuario hacer retiros (reservas) o no.
