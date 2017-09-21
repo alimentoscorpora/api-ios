@@ -64,7 +64,6 @@ FORMAT: 1A
     + Attributes (object)
         + email: juansemilla@gmail.com (required)
         + full_name: Juan Semillamanzana (required)
-        + phone_number: +56975385526
         + facebook_token: b0e89a73ab7d44132dc6125689fbc8b2 (required)
 
 + Response 201 (application/json)
@@ -153,6 +152,11 @@ FORMAT: 1A
         + categories (array[Category], required)
         + selected_store (Store, required)
         + available_schedules (array[Schedule], required)
+        
++ Response 403 (application/json)
+
+    + Attributes (object)
+        + message: No estás autorizado a solicitar para retiro (required)
         
 ### Get dish data [GET /dishes/{id}]
 
@@ -302,15 +306,20 @@ FORMAT: 1A
     + Attributes (object)
         + payments (array[Payment], required)
 
-### Create new payment [POST]
+### Ask for payment registration [POST]
 
 + Request
 
-    + Attributes (Payment)
+    + Attributes (object)
+        + email: juansemilla@gmail.com (required)
+        + full_name: Juan Semillamanzana (required)
+        + card_name: Tarjeta Santander Gold (required)
 
 + Response 201 (application/json)
 
-    + Attributes (Payment)
+    + Attributes (object)
+        + tbk_url: https://www.tbk.cl/ (required)
+        + tbk_token: abcdef1234567890 (required)
         
 ### Remove payment [DELETE /payments/{id}]
 
@@ -383,7 +392,7 @@ FORMAT: 1A
 ## Category (object)
 + id: 1 (number, required)
 + name: Almuerzo (required)
-+ dishes (array[Section], required)
++ sections (array[Section], required)
 
 ## Comment (object)
 + author_name: Sofía (required)
@@ -447,6 +456,11 @@ FORMAT: 1A
 
 ## Payment (object)
 + id: 1 (number, required)
++ email: juansemilla@gmail.com (required)
++ full_name: Juan Semillamanzana (required)
++ card_name: Tarjeta Santander Gold (required)
++ last_digits: 1234 (required)
++ provider: MasterCard (required)
 
 ## Portion (object)
 + sku: 1 (number, required)
@@ -472,8 +486,8 @@ FORMAT: 1A
 ## Schedule (object)
 + id: 1 (number, required)
 + name: Lo antes posible (required)
-+ from_timestamp: 1505499442 (number, required) - Hora de inicio
-+ to_timestamp: 1505500000 (number, required) - Hora de inicio
++ from_timestamp: 1505499442 (number, required) - Hora/Fecha de inicio
++ to_timestamp: 1505500000 (number, required) - Hora/Fecha de inicio
 
 ## Section (object)
 + id: 1 (number, required)
@@ -513,4 +527,4 @@ FORMAT: 1A
 + facebook_token (nullable)
 + credits: 5000 (number, required) - Créditos disponibles para el usuario
 + free_deliveries: 2 (number, required) - Cantidad de repartos gratis disponibles
-+ active: true (boolean, required) - Se le permite al usuario hacer retiros (reservas) o no.
++ takeout_able: true (boolean, required) - Se le permite al usuario hacer retiros (reservas) o no.
