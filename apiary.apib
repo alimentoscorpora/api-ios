@@ -33,6 +33,24 @@ FORMAT: 1A
 
     + Attributes (object)
         + message: La contraseña es inválida o el usuario no existe (required)
+        
+### Login with facebook [POST /users/login_facebook]
+
++ Request
+    + Attributes (object)
+        + email: juansemilla@gmail.com (required)
+        + full_name: Juan Semillamanzana (required)
+        + facebook_token: b0e89a73ab7d44132dc6125689fbc8b2 (required)
+
++ Response 201 (application/json)
+
+    + Attributes (User)
+    
++ Response 400 (application/json)
+
+    + Attributes (object)
+        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+            + facebook_token: El token no es válido
 
 ### Register [POST /users/register]
 
@@ -56,26 +74,6 @@ FORMAT: 1A
         + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
             + email: El correo ya está en uso (required)
             + full_name: Nombre no puede ser vacío
-            + password: La contraseña debe ser de un largo mínimo de 6 caracteres (required)
-        
-### Register with facebook [POST /users/register_facebook]
-
-+ Request
-    + Attributes (object)
-        + email: juansemilla@gmail.com (required)
-        + full_name: Juan Semillamanzana (required)
-        + facebook_token: b0e89a73ab7d44132dc6125689fbc8b2 (required)
-
-+ Response 201 (application/json)
-
-    + Attributes (User)
-    
-+ Response 400 (application/json)
-
-    + Attributes (object)
-        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
-            + email: El correo ya está en uso (required)
-            + facebook_token: El token no es válido
             + password: La contraseña debe ser de un largo mínimo de 6 caracteres (required)
         
 ### Register Device (APNS) [POST /users/apns]
@@ -329,6 +327,8 @@ FORMAT: 1A
 + Response 204 (application/json)
 
 ## Ratings [/ratings]
+
+Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 ### Get rating list [GET]
 
 + Response 200 (application/json)
@@ -397,6 +397,7 @@ FORMAT: 1A
 ## Comment (object)
 + author_name: Sofía (required)
 + body: Lorem ipsum dolor sit amet (required)
++ avatar_url: static/thumbnail.png (required)
 
 ## Commune (object)
 + id: 1 (number, required)
@@ -456,11 +457,17 @@ FORMAT: 1A
 
 ## Payment (object)
 + id: 1 (number, required)
-+ email: juansemilla@gmail.com (required)
-+ full_name: Juan Semillamanzana (required)
-+ card_name: Tarjeta Santander Gold (required)
-+ last_digits: 1234 (required)
-+ provider: MasterCard (required)
++ email: juansemilla@gmail.com (nullable)
++ full_name: Juan Semillamanzana (nullable)
++ title: Tarjeta Santander (nullable)
++ subtitle: MasterCard terminada en 1234 (nullable)
++ kind (enum[number], required) - Tipo de pago
+    + Members
+        + 0 - Contra Entrega
+        + 1 - Tarjeta en entrega
+        + 2 - Oneclick
+        + 3 - Webpay
++ order_kinds: 0,1 (array[number], required) - Para qué tipos de órdenes se puede utilizar el medio de pago
 
 ## Portion (object)
 + sku: 1 (number, required)
@@ -468,6 +475,9 @@ FORMAT: 1A
     + Members
         + 0 - Simple
         + 1 - Doble
++ current_price: 15000 (number, required) - Precio de la porción
++ unlimited_stock: true (boolean, required) - Verdadero si tiene stock infinito
++ stock: 10 (number, required)
 
 ## Rating (object)
 + score (enum[number], required) - 
@@ -477,14 +487,15 @@ FORMAT: 1A
         + 3 - 
         + 4 - 
         + 5 - Excelente!
-+ message (RatingMessage) - Mensaje asociado a la evaluación
++ title: Decepcionante (required) - Nombre a mostrar al seleccionar la nota
++ subtitle: ¿Qué anduvo mal? (nullable) - Título a mostrar para el listado de mensajes
++ message (RatingMessage, nullable) - Mensaje asociado a la evaluación
 
 ## RatingMessage (object)
 + id: 1 (number, required)
 + text: Error en el pedido
 
 ## Schedule (object)
-+ id: 1 (number, required)
 + name: Lo antes posible (required)
 + from_timestamp: 1505499442 (number, required) - Hora/Fecha de inicio
 + to_timestamp: 1505500000 (number, required) - Hora/Fecha de inicio
@@ -498,13 +509,17 @@ FORMAT: 1A
 + weekday (object)
     + open: `09:00-04:00` (string) - Formato: <Hora><Timezone>
     + close: `21:00-04:00` (string) - Formato: <Hora><Timezone>
-+ weekend (object)
++ saturday (object)
+    + open: `10:00-04:00` (string) - Formato: <Hora><Timezone>
+    + close: `22:00-04:00` (string) - Formato: <Hora><Timezone>
++ sunday (object)
     + open: `10:00-04:00` (string) - Formato: <Hora><Timezone>
     + close: `22:00-04:00` (string) - Formato: <Hora><Timezone>
 
 ## Store (object)
 + id: 1 (number, required)
 + name: Plaza las lilas (required)
++ contact_email: tienda@fork.cl (required)
 + address: Eliodoro Yañez 2876 (required)
 + unit_number (number, nullable)
 + commune (Commune, required)
@@ -528,3 +543,4 @@ FORMAT: 1A
 + credits: 5000 (number, required) - Créditos disponibles para el usuario
 + free_deliveries: 2 (number, required) - Cantidad de repartos gratis disponibles
 + takeout_able: true (boolean, required) - Se le permite al usuario hacer retiros (reservas) o no.
++ delivery_able: true (boolean, required) - Se le permite al usuario hacer pedidos a domicilio o no.
