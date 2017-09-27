@@ -9,9 +9,9 @@ FORMAT: 1A
 
     + Attributes (User)
         
-### Get guest token [GET /users/guest]
+### Request guest token [POST /users/guest]
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
     + Attributes (object)
         + auth_token: abcdef1234567890 (required)
@@ -25,7 +25,7 @@ FORMAT: 1A
         + email: juansemilla@gmail.com (required)
         + password: abcdefghi (required)
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
     + Attributes (User)
     
@@ -361,7 +361,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + device_id: abcdef1234567890 (required)
 
 ## Cart (object)
-+ items (array[CartItem], required)
++ items (array[Item], required)
 + kind (enum[number], required) - Tipo de orden
     + Members
         + 0 - Despacho
@@ -386,7 +386,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + payment_id: 1 (number, required)
 
 ## CartItem (object)
-+ portion (Portion, required)
++ portion_sku: 12 (required)
 + quantity: 1 (number, required)
 
 ## Category (object)
@@ -413,7 +413,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + subtitle: con lentejas al vino tinto (required)
 + thumbnail_url: static/thumbnail.png (required)
 + tags (array[Tag], required)
-+ portions (array[Portion], required)
++ items (array[ItemOffer], required)
 
 ## DishFull (Dish)
 + description: Congrio cocido al vapor (required)
@@ -427,10 +427,14 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 
 ## Item (object)
 + portion (Portion, required)
-+ quantity: 1 (number, required)
-+ dish_name: Asado de tira con lentejas al vino tinto (required)
-+ dish_id: 1 (number, required)
 + unit_price: 15000 (number, required)
++ quantity: 10 (number, required)
+
+## ItemOffer (object)
++ portion (Portion, required)
++ unit_price: 15000 (number, required)
++ stock: 10 (number, required)
++ unlimited_stock: true (boolean, required) - Verdadero si tiene stock infinito
 
 ## Order (object)
 + items (array[Item], required)
@@ -469,15 +473,16 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
         + 3 - Webpay
 + order_kinds: 0,1 (array[number], required) - Para qué tipos de órdenes se puede utilizar el medio de pago
 
-## Portion (object)
+## Portion (PortionOffer)
++ dish_name: Asado de tira con lentejas al vino tinto (required)
++ dish_id: 1 (number, required)
+
+## PortionOffer (object)
 + sku: 1 (number, required)
 + kind (enum[number], required) - Tipo de porción
     + Members
         + 0 - Simple
         + 1 - Doble
-+ current_price: 15000 (number, required) - Precio de la porción
-+ unlimited_stock: true (boolean, required) - Verdadero si tiene stock infinito
-+ stock: 10 (number, required)
 
 ## Rating (object)
 + score (enum[number], required) - 
