@@ -127,7 +127,7 @@ FORMAT: 1A
 + Response 204
 
 ## Dishes [/dishes]
-### Get dishes for an address [GET /dishes?{address_id}]
+### Get dishes for an address [GET /dishes{?address_id}]
 
 + Parameters
     + address_id: 1 (number, required) - Platos disponibles para un address en específico
@@ -138,11 +138,13 @@ FORMAT: 1A
         + categories (array[Category], required)
         + selected_address (Address, required)
         + available_schedules (array[Schedule], required)
+        + default_schedule (Schedule, required)
         
-### Get dishes for a store [GET /dishes?{store_id}]
+### Get dishes for a store [GET /dishes{?store_id,schedule_id}]
 
 + Parameters
     + store_id: 1 (number, required) - Platos disponibles para una tienda en específico
+    + schedule_id: 1 (number, required) - 
 
 + Response 200 (application/json)
 
@@ -150,6 +152,7 @@ FORMAT: 1A
         + categories (array[Category], required)
         + selected_store (Store, required)
         + available_schedules (array[Schedule], required)
+        + default_schedule (Schedule, required)
         
 + Response 403 (application/json)
 
@@ -501,9 +504,9 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + text: Error en el pedido
 
 ## Schedule (object)
-+ name: Lo antes posible (required)
-+ from_timestamp: 1505499442 (number, required) - Hora/Fecha de inicio
-+ to_timestamp: 1505500000 (number, required) - Hora/Fecha de inicio
++ id: 1 (number, required)
++ title: antes de (required)
++ subtitle: 14 hrs (required)
 
 ## Section (object)
 + id: 1 (number, required)
@@ -511,15 +514,10 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + dishes (array[Dish], required)
 
 ## ServiceHours (object)
-+ weekday (object)
-    + open: `09:00-04:00` (string) - Formato: <Hora><Timezone>
-    + close: `21:00-04:00` (string) - Formato: <Hora><Timezone>
-+ saturday (object)
-    + open: `10:00-04:00` (string) - Formato: <Hora><Timezone>
-    + close: `22:00-04:00` (string) - Formato: <Hora><Timezone>
-+ sunday (object)
-    + open: `10:00-04:00` (string) - Formato: <Hora><Timezone>
-    + close: `22:00-04:00` (string) - Formato: <Hora><Timezone>
++ weekday: Lunes (required)
++ open: `09:00-04:00` (required) - Formato: <Hora><Timezone>
++ close: `21:00-04:00` (required) - Formato: <Hora><Timezone>
+
 
 ## Store (object)
 + id: 1 (number, required)
@@ -531,7 +529,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + coordinates (Coordinates, required) - Coordenadas de la tienda
 + geofence (Geofence, required) - Polígono de reparto
 + image_url: static/image.png (required)
-+ service (ServiceHours, required)
++ service (array[ServiceHours], required)
 
 ## Tag (object)
 + id: 1 (number, required)
