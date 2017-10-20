@@ -127,10 +127,10 @@ FORMAT: 1A
 + Response 204
 
 ## Dishes [/dishes]
-### Get dishes for an address [GET /dishes{?address_id}]
+### Get dishes for an address [GET /addresses/{id}/dishes]
 
 + Parameters
-    + address_id: 1 (number, required) - Platos disponibles para un address en específico
+    + id: 1 (number, required) - Id de la dirección para la que se solicitan platos
 
 + Response 200 (application/json)
 
@@ -140,11 +140,15 @@ FORMAT: 1A
         + available_schedules (array[Schedule], required)
         + default_schedule (Schedule, required)
         
-### Get dishes for a store [GET /dishes{?store_id,schedule_id}]
+### Get dishes for a store [GET /stores/{id}/dishes{?kind}]
 
 + Parameters
-    + store_id: 1 (number, required) - Platos disponibles para una tienda en específico
-    + schedule_id: 1 (number, required) - 
+    + id: 1 (number, required) - Id de la tienda para la que se solicitan platos
+    + kind: 1 (enum[number], required) - Indica si los platos a mostrar son para domicilio o retiro en tienda
+        + Members
+            + 0 - Despacho
+            + 1 - Retiro lo antes posible
+            + 2 - Retiro fin de semana
 
 + Response 200 (application/json)
 
@@ -319,8 +323,8 @@ FORMAT: 1A
 + Response 201 (application/json)
 
     + Attributes (object)
-        + tbk_url: https://www.tbk.cl/ (required)
-        + tbk_token: abcdef1234567890 (required)
+        + url: https://www.tbk.cl/ (required)
+        + token: abcdef1234567890 (required)
         
 ### Remove payment [DELETE /payments/{id}]
 
@@ -382,7 +386,8 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + kind (enum[number], required) - Tipo de orden
     + Members
         + 0 - Despacho
-        + 1 - Retiro
+        + 1 - Retiro lo antes posible
+        + 2 - Retiro fin de semana
 + address_id: 1 (number, nullable) - id del usuario, nula a menos que sea despacho
 + store_id: 1 (number, nullable) - id de la tienda, nula a menos que sea retiro
 + schedule_id: 1 (number, required)
@@ -444,7 +449,8 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + kind (enum[number], required) - Tipo de orden
     + Members
         + 0 - Despacho
-        + 1 - Retiro
+        + 1 - Retiro lo antes posible
+        + 2 - Retiro fin de semana
 + rating (Rating) - Evaluación del usuario
 + address (Address, nullable) - Dirección del usuario, nula a menos que sea despacho
 + store (Store, nullable) - Dirección de la tienda, nula a menos que sea retiro
@@ -461,6 +467,8 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + paid_amount: 25000 (number, required)
 + hash: ABCDEF1234567890 (required) - Hash único para generar el QR
 + delivered_timestamp: 1505499442 (number, nullable) - Fecha y hora (epoch) de la entrega de la orden, nulo si no se ha entregado
++ url: http://payme/now (string, nullable) - Si existe, url a la que se debe redirigir para completar el pago.
++ token: ABCDEF1234567890 (string, nullable) - Si existe url, el token que se debe enviar para completar el pago.
 
 ## Payment (object)
 + id: 1 (number, required)
@@ -470,10 +478,10 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + subtitle: MasterCard terminada en 1234 (nullable)
 + kind (enum[number], required) - Tipo de pago
     + Members
-        + 0 - Contra Entrega
-        + 1 - Tarjeta en entrega
-        + 2 - Oneclick
-        + 3 - Webpay
+        + 1 - Pago en tienda
+        + 2 - Pago contra Entrega
+        + 3 - Oneclick
+        + 4 - Transbank
 + order_kinds: 0,1 (array[number], required) - Para qué tipos de órdenes se puede utilizar el medio de pago
 
 ## Portion (PortionOffer)
