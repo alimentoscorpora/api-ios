@@ -127,7 +127,7 @@ FORMAT: 1A
 + Response 204
 
 ## Dishes [/dishes]
-### Get dishes for an address [GET /addresses/{id}/dishes]
+### Get dishes for an address [GET /dishes/addresses/{id}]
 
 + Parameters
     + id: 1 (number, required) - Id de la dirección para la que se solicitan platos
@@ -140,7 +140,7 @@ FORMAT: 1A
         + available_schedules (array[Schedule], required)
         + default_schedule (Schedule, required)
         
-### Get dishes for a store [GET /stores/{id}/dishes{?kind}]
+### Get dishes for a store [GET /dishes/stores/{id}{?kind}]
 
 + Parameters
     + id: 1 (number, required) - Id de la tienda para la que se solicitan platos
