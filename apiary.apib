@@ -482,7 +482,13 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
         + 2 - Pago contra Entrega
         + 3 - Oneclick
         + 4 - Transbank
-+ order_kinds: 0,1 (array[number], required) - Para qué tipos de órdenes se puede utilizar el medio de pago
++ order_kinds:payment  0,1 (array[number], required) - Para qué tipos de órdenes se puede utilizar el medio de pago
++ status: 1 (enum[number], required) - Estado del medio de pago
+    + Members
+        + 0 - Pendiente
+        + 1 - Ok
+        + 2 - Rechazado Transbank
+        + 3 - Rechazado Fork
 
 ## Portion (PortionOffer)
 + dish_name: Asado de tira con lentejas al vino tinto (required)
