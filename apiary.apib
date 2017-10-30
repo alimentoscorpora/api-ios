@@ -391,7 +391,13 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + address_id: 1 (number, nullable) - id del usuario, nula a menos que sea despacho
 + store_id: 1 (number, nullable) - id de la tienda, nula a menos que sea retiro
 + schedule_id: 1 (number, required)
-+ payment_id: 1 (number, required)
++ payment_kind (enum[number], required) - Tipo de pago
+    + Members
+        + 1 - Pago en tienda
+        + 2 - Pago contra Entrega
+        + 3 - Oneclick
+        + 4 - Transbank
++ payment_id: 1 (number) - id del medio de pago, si el tipo lo requiriese (ej: Oneclick)
 
 ## CartItem (object)
 + portion_sku: 12 (required)
