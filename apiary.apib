@@ -444,6 +444,15 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + stock: 10 (number, required)
 + unlimited_stock: true (boolean, required) - Verdadero si tiene stock infinito
 
+## OneClick (object)
++ response_code (string, nullable) - Texto que indica si la transacción se aprobó.
++ authorization_code (number, nullable) - Número de autorización de transbank.
++ card_numbers (number, nullable) - Últimos 4 dígitos de la tarjeta que se usó.
++ card_kind (string, nullable) - Tipo de la tarjeta que se usó. VISA, MASTER CARD, etc.
++ transaction_id (number, nullable) - ID de la transacción del comercio.
++ transaction_date (number, nullable) - Fecha y hora (epoc) de la transacción.
++ payment_kind (string, nullable) - Crédito o débito.
+
 ## Order (object)
 + items (array[Item], required)
 + kind (enum[number], required) - Tipo de orden
@@ -469,6 +478,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + delivered_timestamp: 1505499442 (number, nullable) - Fecha y hora (epoch) de la entrega de la orden, nulo si no se ha entregado
 + url: http://payme/now (string, nullable) - Si existe, url a la que se debe redirigir para completar el pago.
 + token: ABCDEF1234567890 (string, nullable) - Si existe url, el token que se debe enviar para completar el pago.
++ one_click (OneClick, nullable) - Información adicional que debe mostrarse luego de una compra por OneClick.
 
 ## Payment (object)
 + id: 1 (number, required)
