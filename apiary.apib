@@ -14,7 +14,7 @@ FORMAT: 1A
 + Request
 
     + Attributes (object)
-        + full_name: juansemilla@gmail.com - Nuevo nombre
+        + full_name: Juan Semillamanzana - Nuevo nombre
         + email: juansemilla@gmail.com - Nuevo correo
         + phone_number: +56 987 654 321 - Nuevo teléfono
 
@@ -70,7 +70,7 @@ FORMAT: 1A
 + Response 400 (application/json)
 
     + Attributes (object)
-        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+        + errors (object, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
             + facebook_token: El token no es válido
 
 ### Register [POST /users/register]
@@ -92,7 +92,7 @@ FORMAT: 1A
 + Response 400 (application/json)
 
     + Attributes (object)
-        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+        + errors (object, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
             + email: El correo ya está en uso (required)
             + full_name: Nombre no puede ser vacío
             + password: La contraseña debe ser de un largo mínimo de 6 caracteres (required)
@@ -110,7 +110,7 @@ FORMAT: 1A
 + Response 400 (application/json)
 
     + Attributes (object)
-        + errors (array, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+        + errors (object, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
             + email: El correo ya está en uso (required)
             + facebook_token: El token de facebook no es válido
             + password: La contraseña debe ser de un largo mínimo de 6 caracteres (required)
