@@ -8,6 +8,27 @@ FORMAT: 1A
 + Response 200 (application/json)
 
     + Attributes (User)
+    
+### Update current user [POST /users/current]
+
++ Request
+
+    + Attributes (object)
+        + full_name: juansemilla@gmail.com - Nuevo nombre
+        + email: juansemilla@gmail.com - Nuevo correo
+        + phone_number: +56 987 654 321 - Nuevo teléfono
+
++ Response 200 (application/json)
+    + Attributes (User)
+
++ Response 400 (application/json)
+
+    + Attributes (object)
+        + errors (object, required) - La llave de cada error debe coincidir con la llave del JSON que se envió
+            + full_name: El nombre no puede estar vacío
+            + email: El email ya está en uso por otro usuario
+            
+    
         
 ### Request guest token [POST /users/guest]
 
