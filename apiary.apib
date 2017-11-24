@@ -191,7 +191,7 @@ FORMAT: 1A
 
 + Response 200 (application/json)
 
-    + Attributes (Dish)
+    + Attributes (DishFull)
         
 ## Shoping Cart [/cart]
 
@@ -278,7 +278,7 @@ FORMAT: 1A
         + `street_and_number`: Avenida Siempreviva 1234 (required)
         + unit_number: 701 (number, nullable)
         + commune_id: 1 (number, required) - Id de la comuna seleccionada
-        + coordinates (Coordinates, required) - Coordenadas de la ubicación
+        + comment: Cuidado con el perro (string, nullable) - Comentario de la dirección
 
 + Response 201 (application/json)
 
@@ -296,6 +296,7 @@ FORMAT: 1A
         + unit_number: 701 (number, nullable)
         + commune_id: 1 (number, required) - Id de la comuna seleccionada
         + coordinates (Coordinates, required) - Coordenadas de la ubicación
+        + comment: Cuidado con el perro (string, nullable) - Comentario de la dirección
 
 + Response 200 (application/json)
 
@@ -362,16 +363,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + Response 200 (application/json)
 
     + Attributes (object)
-        + ratings (array[object], required) - Listado de posibles evaluaciones y mensajes asociados
-            - (object)
-                + score (enum[number], required)
-                    + Members
-                        + 1 - Decepcionante
-                        + 2 - 
-                        + 3 - 
-                        + 4 - 
-                        + 5 - Excelente!
-                + messages (array[RatingMessage], required)
+        + ratings (array[Rating], required) - Listado de posibles evaluaciones y mensajes asociados
 
 # Data Structures
 
@@ -383,6 +375,8 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + commune (Commune, required)
 + coordinates (Coordinates, required) - Coordenadas de la ubicación
 + delivery_available: true (boolean, required) - Indica si la ubicación tiene delivery disponible o no
++ store_id: 5 (number, nullable) - Indica la tineda asociada, si es que hay una
++ comment: Cuidado con el perro (string, nullable) - Comentario de la dirección
 
 ## Apns (object)
 + registration_id: abcdef1234567890 (required)
@@ -443,11 +437,17 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + thumbnail_url: static/thumbnail.png (required)
 + tags (array[Tag], required)
 + items (array[ItemOffer], required)
++ comments (array[Comment], required)
 
 ## DishFull (Dish)
++ id: 1 (number, required)
++ title: Asado de tira (required)
++ subtitle: con lentejas al vino tinto (required)
++ thumbnail_url: static/thumbnail.png (required)
++ tags (array[Tag], required)
 + description: Congrio cocido al vapor (required)
-+ chef_name: Laurent Pasqualetto (required)
-+ chef_comment: Este plato para mi es (required)
++ items (array[ItemOffer], required)
++ chef_comment (Comment, required)
 + user_comments (array[Comment], required)
 + image_url: static/full.png (required)
 
@@ -500,6 +500,8 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
 + url: http://payme/now (string, nullable) - Si existe, url a la que se debe redirigir para completar el pago.
 + token: ABCDEF1234567890 (string, nullable) - Si existe url, el token que se debe enviar para completar el pago.
 + one_click (OneClick, nullable) - Información adicional que debe mostrarse luego de una compra por OneClick.
++ clerk_name: Macarena (string, nullable) - Persona que atendió la orden.
++ clerk_thumbnail: static/thumbnail.png (string, nullable) - Thumbnail de la persona que atendió la orden.
 
 ## Payment (object)
 + id: 1 (number, required)
@@ -513,6 +515,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
         + 2 - Pago contra Entrega
         + 3 - Oneclick
         + 4 - Transbank
+        + 5 - Créditos Fork (completamente)
 + order_kinds: 0,1,2 (array[number], required) - Para qué tipos de órdenes se puede utilizar el medio de pago (0: Despacho, 1: Retiro lo antes posible, 2: Retiro fin de semana)
 + status: 1 (enum[number], required) - Estado del medio de pago
     + Members
@@ -542,7 +545,7 @@ Entrega las distintas opciones que tendrá el usuario para evaluar una orden
         + 5 - Excelente!
 + title: Decepcionante (required) - Nombre a mostrar al seleccionar la nota
 + subtitle: ¿Qué anduvo mal? (nullable) - Título a mostrar para el listado de mensajes
-+ message (RatingMessage, nullable) - Mensaje asociado a la evaluación
++ messages (array[RatingMessage], nullable) - Mensajes asociado a la evaluación
 
 ## RatingMessage (object)
 + id: 1 (number, required)
